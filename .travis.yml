@@ -1,0 +1,13 @@
+sudo: required
+
+language: ruby # Unused by our setup. This is the default.
+
+services:
+  - docker
+
+script:
+  if [ "$TRAVIS_BRANCH" == "master" ]; then
+  docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  docker build -t marcopolee/ruby-node-alpine .;
+  docker push marcopolee/ruby-node-alpine;
+  fi
