@@ -14,7 +14,7 @@ This image provides provides the following library versions by default:
 
 - Ruby (2.2.8)
 
-- Node (8.8.1)
+- Node (8.9.0)
 
 - Yarn (1.2.1)
 

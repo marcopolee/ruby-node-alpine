@@ -11,7 +11,7 @@ ENV RUBY_VERSION 2.2.8
 ENV RUBY_DOWNLOAD_SHA256 37eafc15037396c26870f6a6c5bcd0658d14b46cd5e191a3b56d89dd22d561b0
 ENV RUBYGEMS_VERSION 2.6.14
 ENV BUNDLER_VERSION 1.16.0
-ENV NODE_VERSION 8.8.1
+ENV NODE_VERSION 8.9.0
 ENV YARN_VERSION 1.2.1
 
 # Installing Ruby
@@ -19,7 +19,6 @@ ENV YARN_VERSION 1.2.1
 #   we purge system ruby later to make sure our final image uses what we just built
 # readline-dev vs libedit-dev: https://bugs.ruby-lang.org/issues/11869 and https://github.com/docker-library/ruby/issues/75
 RUN set -ex \
-	\
 	&& apk add --no-cache --virtual .ruby-builddeps \
 		autoconf \
 		bison \
@@ -47,16 +46,12 @@ RUN set -ex \
 		xz \
 		yaml-dev \
 		zlib-dev \
-	\
 	&& wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz" \
 	&& echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz" | sha256sum -c - \
-	\
 	&& mkdir -p /usr/src/ruby \
 	&& tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1 \
 	&& rm ruby.tar.xz \
-	\
 	&& cd /usr/src/ruby \
-	\
 # hack in "ENABLE_PATH_CHECK" disabling to suppress:
 #   warning: Insecure world writable dir
 	&& { \
@@ -65,7 +60,6 @@ RUN set -ex \
 		cat file.c; \
 	} > file.c.new \
 	&& mv file.c.new file.c \
-	\
 	&& autoconf \
 	&& gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
 # the configure script does not detect isnan/isinf as macros
@@ -76,7 +70,6 @@ RUN set -ex \
 		--enable-shared \
 	&& make -j "$(nproc)" \
 	&& make install \
-	\
 	&& runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
 			| tr ',' '\n' \
@@ -94,7 +87,6 @@ RUN set -ex \
 	&& apk del .ruby-builddeps \
 	&& cd / \
 	&& rm -r /usr/src/ruby \
-	\
 	&& gem update --system "$RUBYGEMS_VERSION" \
 	&& gem install bundler --version "$BUNDLER_VERSION" --force
 
@@ -133,6 +125,7 @@ RUN addgroup -g 1000 node \
     C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
     B9AE9905FFD7803F25714661B63B535A4C206CA9 \
     56730D5401028683275BD23C23EFEFE93C4CFFFE \
+    77984A986EBC2AA786BC0F66B01FBB92821C587A \
   ; do \
     gpg --keyserver pgp.mit.edu --recv-keys "$key" || \
     gpg --keyserver keyserver.pgp.com --recv-keys "$key" || \
