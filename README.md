@@ -1,5 +1,7 @@
 # ruby-node-alpine
 
+[![Build Status](https://travis-ci.org/marcopolee/ruby-node-alpine.svg?branch=master)](https://travis-ci.org/marcopolee/ruby-node-alpine)
+
 This docker image provides Ruby, Node, and Yarn.
 It is intended to be used for a Rails app environment
 that supports client-side resources through Rails' Webpacker.
